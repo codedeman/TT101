@@ -19,13 +19,9 @@ class NewsDetailVC: UIViewController,WKNavigationDelegate {
         super.viewDidLoad()
     
         if web_url != nil{
-            
             DispatchQueue.main.asyncAfter(deadline: .now()+2, execute: {
-                
                 self.spinnner.stopAnimating()
-
                 self.loadNewsPage(urlString: self.web_url)
-
                 
             })
             
@@ -40,10 +36,8 @@ class NewsDetailVC: UIViewController,WKNavigationDelegate {
         
             if CheckInternet.connectInternet(){
                 
-                
             }else{
                 self.showOffline()
-                
                 
             }
 
@@ -51,7 +45,6 @@ class NewsDetailVC: UIViewController,WKNavigationDelegate {
     
     func configureNavigation()
     {
-
             let navBar = UINavigationBar(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 50))
             let backbutton = UIButton(type: .custom)
             backbutton.setTitle("Back", for: .normal)

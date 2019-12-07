@@ -16,12 +16,9 @@ protocol SendBackData {
 
 class DatePickerVC: UIViewController {
     
-
     var delegate: SendBackData?
-    
     var newsViewModel = NewsViewModel()
     var disposeBag = DisposeBag()
-
 
     @IBOutlet weak var selectedButton: UIButton!
     
@@ -30,9 +27,7 @@ class DatePickerVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         dismissKeyboard()
-        
         selectedButton.isHidden = true
-        
         datePicker.addTarget(self, action: #selector(dateChanged), for: .valueChanged)
     }
     
@@ -41,7 +36,6 @@ class DatePickerVC: UIViewController {
 //        getCurrent()
 
     }
-    
     
     @IBAction func selectedButonWasPressed(_ sender: Any) {
         
@@ -58,9 +52,6 @@ class DatePickerVC: UIViewController {
     }
     
     
-    
-   
-    
     @objc func dateChanged(_ sender:UIDatePicker){
         
         let components = Calendar.current.dateComponents([.year, .month, .day], from: sender.date)
@@ -69,9 +60,7 @@ class DatePickerVC: UIViewController {
                           selectedButton.isHidden = false
                     
                     print("day \(day)")
-                          
         }
-        
 
     }
     
@@ -103,14 +92,6 @@ class DatePickerVC: UIViewController {
     }
 
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
+   
 
 }

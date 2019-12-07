@@ -8,11 +8,13 @@
 
 import UIKit
 import Alamofire
+@available(iOS 13.0, *)
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
 
     let manager = NetworkReachabilityManager(host: "https://www.nytimes.com")
+    @available(iOS 13.0, *)
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         
         

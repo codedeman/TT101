@@ -39,8 +39,9 @@ class SearchVC: UIViewController {
     }
     
     func blindUI(){
-           
-        searchInputTxt.rx.text.asObservable().bind(to: newsViewModel.searchInput).disposed(by: disposeBag)
+        
+        self.searchInputTxt.rx.text.throttle(1, scheduler: MainScheduler.instance).distinctUntilChanged().asObservable().bind(to: newsViewModel.searchInput).disposed(by: disposeBag)
+        
         searchInputTxt.rx.text.subscribe(onNext: { (text) in
                 if text!.isEmpty{
                     
@@ -89,7 +90,6 @@ class SearchVC: UIViewController {
                self.navigationController?.present(pvc, animated: true, completion: nil)
                
             }).disposed(by: disposeBag)
-                
                 
                 
         }
