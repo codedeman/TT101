@@ -14,7 +14,6 @@ import SwiftyJSON
 
 class NewsViewModel:NSObject {
     
-    
     var searchResult = BehaviorRelay<[NewsModel]>(value: [])
     let resultDefault = BehaviorRelay<String>(value: "")
     var searchInput =  BehaviorRelay<String?>(value: "")
@@ -29,30 +28,27 @@ class NewsViewModel:NSObject {
     // blinding data
     func blindingData()  {
         
-        
         // default result
-         resultDefault.map{return $0}.subscribe { (event) in
 
-                    event.map { (text) in
-
-                        let url = BASE_URL+"\(text)"+TOKEN
-                        self.requestJson(url: url)
-                    }
-         }.disposed(by: disposeBag)
-        
-        
-            self.searchInput.asObservable().subscribe(onNext: { (text) in
+            resultDefault.asObservable().subscribe(onNext: { (text) in
                 
-                    if text!.isEmpty{
-                        
-                    
-                    }else{
-                        let url = BASE_URL2+"\(text!)"+TOKEN2
-                        self.requestJson(url: url)
-                    }
+                let url = BASE_URL+"\(text)"+TOKEN
+                self.requestJson(url: url)
                 
             }, onError: nil, onCompleted: nil).disposed(by: disposeBag)
+            
+            
+            self.searchInput.asObservable().subscribe(onNext: { (text) in
                 
+                if text!.isEmpty{
+                    
+                    
+                }else{
+                    let url = BASE_URL2+"\(text!)"+TOKEN2
+                    self.requestJson(url: url)
+                }
+                
+            }, onError: nil, onCompleted: nil).disposed(by: disposeBag)
         
         }
     
@@ -62,7 +58,6 @@ class NewsViewModel:NSObject {
         AF.request(url).responseJSON { (reponse) in
             
             DispatchQueue.global(qos: .background).async {
-                
                 guard let data = reponse.data else {return}
                 
                 do{
@@ -114,7 +109,6 @@ class NewsViewModel:NSObject {
                     
                     let new = NewsModel(thumnail: url, subtitle: subtitle, pubdate: pub_date, title: title, url: web_url)
                     newArr.append(new)
-                    
                     return  new
                     
                 }

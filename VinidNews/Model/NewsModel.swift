@@ -8,29 +8,11 @@
 
 import Foundation
 
-class NewsModel{
-    
-    
+struct NewsModel{
     public let thumnail:String!
     public let subtitle:String!
     public let pubdate:String
-    
     public let title:String
     public let url:String
-    
-    
-    init(thumnail:String,subtitle:String,pubdate:String,title:String,url:String) {
-        
-        self.thumnail = thumnail
-        self.subtitle = subtitle
-        self.pubdate = pubdate
-        self.title = title
-        self.url = url
-    }
-    
-   
-    
-    
-   
     
 }

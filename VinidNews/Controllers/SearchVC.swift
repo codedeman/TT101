@@ -40,7 +40,7 @@ class SearchVC: UIViewController {
     
     func blindUI(){
         
-        self.searchInputTxt.rx.text.throttle(1, scheduler: MainScheduler.instance).distinctUntilChanged().asObservable().bind(to: newsViewModel.searchInput).disposed(by: disposeBag)
+        self.searchInputTxt.rx.text.throttle(2, scheduler: MainScheduler.instance).distinctUntilChanged().asObservable().bind(to: newsViewModel.searchInput).disposed(by: disposeBag)
         
         searchInputTxt.rx.text.subscribe(onNext: { (text) in
                 if text!.isEmpty{
