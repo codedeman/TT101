@@ -13,7 +13,6 @@ import RxCocoa
 protocol SearchRouting: ViewableRouting {
     
     func closeViewController()
-    // TODO: Declare methods the interactor can invoke to manage sub-tree via the router.
 }
 
 protocol SearchPresentable: Presentable {
@@ -22,9 +21,7 @@ protocol SearchPresentable: Presentable {
     
     func present(viewController: ViewControllable)
     func dismiss(viewController: ViewControllable)
-    
     var result: BehaviorRelay<[DocsSection]> {get set}
-
     func loadDataDone()
 
     
@@ -65,13 +62,8 @@ final class SearchInteractor: PresentableInteractor<SearchPresentable>, SearchIn
 
     private func fetchData(){
         param.asObservable().subscribe(onNext: { (param) in
-            
-            print(param.keyword)
-            
             let url = BASE_URL2+"\(param.keyword)"+TOKEN2+"&page=\(param.pageIndex)"
-
             DataService.instance.getArtice(url: url) { (data) in
-                
                 self.presenter.loadDataDone()
                 self.getData(data: data, pageIndex: param.pageIndex)
             }

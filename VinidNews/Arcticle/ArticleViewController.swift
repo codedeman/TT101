@@ -16,7 +16,6 @@ protocol ArticlePresentableListener: ArticleListener {
     func didTapSearchButton()
     func didSelectItem(url:URL)
     func didTapDatePicker()
-    func getDate(date:String)
 }
 
 final class ArticleViewController: UIViewController,ArticlePresentable, ArticleViewControllable {

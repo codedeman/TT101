@@ -15,8 +15,6 @@ protocol ArticleRouting: ViewableRouting {
     func routeToSearch()
     func route(url:URL)
     func routeToDatePicker()
-
-
     
 }
 
@@ -28,7 +26,6 @@ protocol ArticlePresentable: Presentable {
 
 protocol ArticleListener: class {
 
-    
 
 }
 
@@ -42,12 +39,8 @@ final class ArticleInteractor: PresentableInteractor<ArticlePresentable>, Articl
             self.presenter.resultDefault.accept(article)
         }
 
-        
     }
     
-    func getDate(date: String) {
-        print("date ssss \(date)")
-    }
     
     func didTapDatePicker() {
         router?.routeToDatePicker()
@@ -58,9 +51,6 @@ final class ArticleInteractor: PresentableInteractor<ArticlePresentable>, Articl
         router?.route(url: url)
     }
     
-    
-    
-   
     
     weak var router: ArticleRouting?
     weak var listener: ArticleListener?
@@ -73,8 +63,12 @@ final class ArticleInteractor: PresentableInteractor<ArticlePresentable>, Articl
     
     
     func getArticle() {
-        let url = "https://api.nytimes.com/svc/archive/v1/2019/11.json?api-key=pH4PGY4gblvAcFIMKV8x7MixeFUrf1AR"
-
+        
+        let date = Date()
+        let components = Calendar.current.dateComponents([.year, .month, .day], from: date)
+        let dateString = "\(String(describing: components.year!))/"+"\(String(describing: components.month!))"
+//        let url = "https://api.nytimes.com/svc/archive/v1/\(dateString).json?api-key=pH4PGY4gblvAcFIMKV8x7MixeFUrf1AR"
+        let url = BASE_URL+"\(dateString)"+TOKEN
         DataService.instance.getArtice(url: url) { (article) in
             self.presenter.resultDefault.accept(article)
         }
@@ -85,14 +79,7 @@ final class ArticleInteractor: PresentableInteractor<ArticlePresentable>, Articl
         router?.routeToSearch()
     
     }
-    
-//   func didSelectItem(_ item: NewsModel?) {
-//
-//    router?.route(toItem: item!)
-//    }
-    
-        
- 
+
     override init(presenter: ArticlePresentable) {
         super.init(presenter: presenter)
         presenter.listener = self
@@ -102,17 +89,12 @@ final class ArticleInteractor: PresentableInteractor<ArticlePresentable>, Articl
     
     override func didBecomeActive() {
         super.didBecomeActive()
-        
-        
         getArticle()
-
-    
 
     }
 
     override func willResignActive() {
         super.willResignActive()
-//            getArticle()
 
         // TODO: Pause any business logic.
     }
