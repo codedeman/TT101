@@ -67,7 +67,6 @@ final class ArticleInteractor: PresentableInteractor<ArticlePresentable>, Articl
         let date = Date()
         let components = Calendar.current.dateComponents([.year, .month, .day], from: date)
         let dateString = "\(String(describing: components.year!))/"+"\(String(describing: components.month!))"
-//        let url = "https://api.nytimes.com/svc/archive/v1/\(dateString).json?api-key=pH4PGY4gblvAcFIMKV8x7MixeFUrf1AR"
         let url = BASE_URL+"\(dateString)"+TOKEN
         DataService.instance.getArtice(url: url) { (article) in
             self.presenter.resultDefault.accept(article)
