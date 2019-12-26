@@ -8,10 +8,13 @@
 
 import UIKit
 import Alamofire
+import RIBs
 @available(iOS 13.0, *)
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
+    
+    private var launchRouter:LaunchRouting!
 
     let manager = NetworkReachabilityManager(host: "https://www.nytimes.com")
     @available(iOS 13.0, *)
@@ -19,7 +22,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         
 
-        guard let _ = (scene as? UIWindowScene) else { return }
+        guard let windowScene = (scene as? UIWindowScene) else { return }
+        
+        let window = UIWindow(windowScene: windowScene)
+        self.window = window
+        
+        let launchRouter = RootBuilder(dependency: AppComponent()).build()
+        
+        self.launchRouter = launchRouter
+        launchRouter.launchFromWindow(window)
+        
         
      
     }

@@ -8,13 +8,22 @@
 
 import Foundation
 typealias CompletionHandler = (_ Success: Bool) -> ()
+
 let BASE_URL = "https://api.nytimes.com/svc/archive/v1/"
+
 let BASE_URL2 = "https://api.nytimes.com/svc/search/v2/articlesearch.json?q="
+
+
 let TOKEN2 = "&api-key=pH4PGY4gblvAcFIMKV8x7MixeFUrf1AR"
+
 let TOKEN = ".json?api-key=pH4PGY4gblvAcFIMKV8x7MixeFUrf1AR"
+
 let HEADER = [
     "Content-Type": "application/json; charset=utf-8"
 ]
+
+
+//let exmapler = "https://api.nytimes.com/svc/search/v2/articlesearch.json?q=election&api-key=pH4PGY4gblvAcFIMKV8x7MixeFUrf1AR&page=2"
 
 
 typealias NewsResponseCompletion = (NewsModel?) -> Void
