@@ -15,7 +15,6 @@ protocol SearchInteractable: Interactable {
 
 protocol SearchViewControllable: ViewControllable {
     
-    func dismiss(viewController: ViewControllable)
 
 }
 
@@ -27,12 +26,7 @@ final class SearchRouter: ViewableRouter<SearchInteractable, SearchViewControlla
     private let articleBuilder:ArticleBuildable
     private let searchBuilder:SearchBuildable
     
-    func closeViewController() {
-        if let currentChild = currentChild {
-            viewControllers.dismiss(viewController: (currentChild.viewControllable))
-        }
-        
-    }
+    
     
 
      init(interactor: SearchInteractable, viewController: SearchViewControllable,articleBuilder:ArticleBuildable,searchBuilder:SearchBuildable) {

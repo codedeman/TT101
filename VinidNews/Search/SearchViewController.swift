@@ -16,57 +16,54 @@ import RxDataSources
 
 
 protocol SearchPresentableListener: class {
-    func cancelSearch()
     var param: BehaviorRelay<ParamSearchArticles>{get set}
+    
+
+    
 
 
 }
 
 final class SearchViewController: UIViewController, SearchPresentable, SearchViewControllable {
-    
-
-    
-    func present(viewController: ViewControllable) {
-        
-    }
-    
-    func dismiss(viewController: ViewControllable) {
-        self.dismiss(animated: false, completion: nil)
-    }
-     
-    
-
-   
-    
+  
     private let disposeBag = DisposeBag()
-    @IBOutlet weak var searchInputTxt:UITextField!
     @IBOutlet weak var searchResultTable: UITableView!
     weak var listener: SearchPresentableListener?
     private let refreshControl = UIRefreshControl()
     private let loadMoreCell: String = "LoadMoreCell"
+    private let newFeedCell:String = "NewFeed2Cell"
     private var indicator: UIActivityIndicatorView!
     private let param: ParamSearchArticles = ParamSearchArticles()
-    @IBOutlet weak var cancelButton: UIButton!
+    private let searchController = UISearchController(searchResultsController: nil)
     var result =  BehaviorRelay<[DocsSection]>(value: [])
-
     
     override func viewDidLoad() {
         super.viewDidLoad()
         initTableView()
         blindSearchUI()
         blinData()
+        navigationItem.searchController = searchController
+        navigationItem.hidesSearchBarWhenScrolling = false
         
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        if CheckInternet.connectInternet(){
+            
+        }else{
+            
+            simpleAlert(title: "No Connection Found ", msg: "Please check your network connection")
+            
+        }
     }
     
+    
     private func initTableView(){
-        searchResultTable.register(UINib(nibName: "NewFeed2Cell", bundle: nil), forCellReuseIdentifier: "NewFeed2Cell")
+        searchResultTable.register(UINib(nibName: newFeedCell, bundle: nil), forCellReuseIdentifier: newFeedCell)
         
         searchResultTable.register(UINib(nibName: loadMoreCell, bundle: nil), forCellReuseIdentifier: loadMoreCell)
         
-            searchResultTable.separatorColor = .clear
+        searchResultTable.separatorColor = .clear
         searchResultTable.contentInset = UIEdgeInsets.init(top: 16, left: 0, bottom: 16, right: 0)
         indicator = UIActivityIndicatorView.init()
         self.view.addSubview(indicator)
@@ -77,8 +74,6 @@ final class SearchViewController: UIViewController, SearchPresentable, SearchVie
         indicator.startAnimating()
         indicator.isHidden = true
         searchResultTable.delegate = self
-        
-        
         
         if #available(iOS 10.0, *) {
             self.searchResultTable.refreshControl = refreshControl
@@ -97,7 +92,7 @@ final class SearchViewController: UIViewController, SearchPresentable, SearchVie
     
     private func onSearch()
     {
-        if let text = searchInputTxt.text, !text.isEmpty, text.count > 0 {
+        if let text = searchController.searchBar.text, !text.isEmpty, text.count > 0 {
             param.keyword = text
             param.pageIndex = 0
             self.listener?.param.accept(param)
@@ -111,32 +106,21 @@ final class SearchViewController: UIViewController, SearchPresentable, SearchVie
             self.refreshControl.endRefreshing()
             self.indicator.isHidden = true
         }
-        
            
     }
     
     
     private func blindSearchUI(){
+        
+        searchController.searchBar.rx.text.asObservable().debounce(3, scheduler: MainScheduler.asyncInstance).subscribe(onNext: { (event) in
+                self.indicator.isHidden = false
+                self.onSearch()
                 
-        searchInputTxt.rx.controlEvent([.editingChanged]).asObservable().throttle(1000, scheduler: MainScheduler.instance).subscribe(onNext: { [unowned self](_) in
-                   self.indicator.isHidden = false
-                   self.onSearch()
-               }).disposed(by: disposeBag)
-        
+            }, onError: nil, onCompleted: nil).disposed(by: disposeBag)
 
-        
-        cancelButton.rx.tap.subscribe(onNext: { [weak self] in
-            
-            self?.listener?.cancelSearch()
-            
-        }).disposed(by: disposeBag)
-        
     }
     
-    
-    
     @objc func refreshData()  {
-        
         param.pageIndex = 0
         self.listener?.param.accept(param)
     }
@@ -152,7 +136,7 @@ final class SearchViewController: UIViewController, SearchPresentable, SearchVie
     
     func getArticlesCell(item: NewsModel) -> UITableViewCell {
         
-          if let cell = self.searchResultTable.dequeueReusableCell(withIdentifier: "NewFeed2Cell") as? NewFeedCell {
+          if let cell = self.searchResultTable.dequeueReusableCell(withIdentifier: newFeedCell) as? NewFeedCell {
             cell.configureCell(data: item)
               return cell
           }
@@ -171,6 +155,19 @@ extension SearchViewController:UITableViewDelegate{
            }
        }
     
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        navigationController?.setNavigationBarHidden(true, animated: true)
+    }
+    
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        DispatchQueue.main.asyncAfter(deadline: .now()+3) {
+            self.navigationController?.setNavigationBarHidden(false, animated: true)
+            
+        }
+
+    }
+    
+
     
 }
 

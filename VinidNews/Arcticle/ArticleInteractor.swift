@@ -30,7 +30,6 @@ protocol ArticleListener: class {
 }
 
 final class ArticleInteractor: PresentableInteractor<ArticlePresentable>, ArticleInteractable, ArticlePresentableListener {
-   
     
     func didSelectDate(date: String) {
         let url = BASE_URL+"\(date)"+TOKEN
@@ -63,7 +62,6 @@ final class ArticleInteractor: PresentableInteractor<ArticlePresentable>, Articl
     
     
     func getArticle() {
-        
         let date = Date()
         let components = Calendar.current.dateComponents([.year, .month, .day], from: date)
         let dateString = "\(String(describing: components.year!))/"+"\(String(describing: components.month!))"

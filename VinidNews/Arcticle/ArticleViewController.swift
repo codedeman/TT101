@@ -19,6 +19,8 @@ protocol ArticlePresentableListener: ArticleListener {
 }
 
 final class ArticleViewController: UIViewController,ArticlePresentable, ArticleViewControllable {
+        
+   
     
     var date:String!
     
@@ -36,11 +38,22 @@ final class ArticleViewController: UIViewController,ArticlePresentable, ArticleV
         view.backgroundColor = UIColor.white
         articleTableViewController?.register(UINib(nibName: "NewFeed2Cell", bundle: nil), forCellReuseIdentifier: "NewFeed2Cell")
         blindUI()
+        
+
+
     }
     
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        if CheckInternet.connectInternet(){
+            
+        }else{
+            
+            simpleAlert(title: "No Connection Found ", msg: "Please check your network connection")
+            
+            
+        }
         
     }
     
@@ -66,7 +79,6 @@ final class ArticleViewController: UIViewController,ArticlePresentable, ArticleV
             self!.listener?.didTapDatePicker()
             
             }, onError: nil, onCompleted: nil).disposed(by: disposeBag)
-        
        
     }
     

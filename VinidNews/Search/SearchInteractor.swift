@@ -12,19 +12,12 @@ import RxCocoa
 
 protocol SearchRouting: ViewableRouting {
     
-    func closeViewController()
 }
 
 protocol SearchPresentable: Presentable {
     var listener: SearchPresentableListener? { get set }
-    
-    
-    func present(viewController: ViewControllable)
-    func dismiss(viewController: ViewControllable)
     var result: BehaviorRelay<[DocsSection]> {get set}
     func loadDataDone()
-
-    
 }
 
 protocol SearchListener: class {
@@ -32,23 +25,13 @@ protocol SearchListener: class {
 }
 
 final class SearchInteractor: PresentableInteractor<SearchPresentable>, SearchInteractable, SearchPresentableListener {
-    
+
     
     var param: BehaviorRelay<ParamSearchArticles>
     private let queue = DispatchQueue.global(qos: .background)
     private let disposeBag = DisposeBag()
     private let group = DispatchGroup()
     private var listData: [Any] = []
-
-    
-    func cancelSearch() {
-        router?.closeViewController()
-        
-    }
-    
-    
-    
-
     weak var router: SearchRouting?
     weak var listener: SearchListener?
 
@@ -61,20 +44,18 @@ final class SearchInteractor: PresentableInteractor<SearchPresentable>, SearchIn
     
 
     private func fetchData(){
-        param.asObservable().subscribe(onNext: { (param) in
-            let url = BASE_URL2+"\(param.keyword)"+TOKEN2+"&page=\(param.pageIndex)"
-            DataService.instance.getArtice(url: url) { (data) in
-                self.presenter.loadDataDone()
-                self.getData(data: data, pageIndex: param.pageIndex)
-            }
+            param.asObservable().subscribe(onNext: { (param) in
+                let url = BASE_URL2+"\(param.keyword)"+TOKEN2+"&page=\(param.pageIndex)"
+                DataService.instance.getArtice(url: url) { (data) in
+                    self.presenter.loadDataDone()
+                    self.getData(data: data, pageIndex: param.pageIndex)
+                }
             }).disposed(by: disposeBag)
-        
+
     }
     
     func getData(data:[NewsModel],pageIndex:Int)  {
-        
         self.queue.sync {
-            
             self.group.enter()
             if pageIndex == 0 { self.listData.removeAll() }
             let itemLoadMore: String = "loadmore"
@@ -90,12 +71,9 @@ final class SearchInteractor: PresentableInteractor<SearchPresentable>, SearchIn
                 self.listData.append(itemLoadMore)
             }
             self.group.leave()
-            
-            
         }
         
         self.group.notify(queue: .main) {
-            
             let oneSection = DocsSection(items: self.listData)
             self.presenter.result.accept([oneSection])
         }
@@ -106,7 +84,6 @@ final class SearchInteractor: PresentableInteractor<SearchPresentable>, SearchIn
     override func didBecomeActive() {
         super.didBecomeActive()
         fetchData()
-        
     }
 
     override func willResignActive() {
